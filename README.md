@@ -16,3 +16,15 @@ Once all answers are revealed, players must **vote for the one they believe was 
 
 Can you outwit the machine — and your friends?
 
+---
+
+## 👥 The Team
+
+- **Alejandro Valverde Mahou** — Programming
+- **Filip Josefsson** — Programming   
+- **Janus Jørgensen** — UI Design  
+- **Henrik Svensson Dalgren** — Visual Design
+- **Mingmin Wu** — Narrative Design 
+
+<img src="/Users/mingmin/Desktop/IMG_7769.jpg" width="400"/>
+
