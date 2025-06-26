@@ -26,5 +26,5 @@ Can you outwit the machine — and your friends?
 - **Henrik Svensson Dalgren** — Visual Design
 - **Mingmin Wu** — Narrative Design 
 
-<img src="/Users/mingmin/Desktop/IMG_7769.jpg" width="400"/>
+<img src="server/IMG_7769.jpg" width="600"/>
 
