@@ -8,7 +8,7 @@ You must respond **in character**, based on random prompts for **roles** and **l
 
 At the same time, an **AI agent** 🤖 will also answer the question.
 
-Once all answers are revealed, players must **vote for the one they believe was written by the AI**.
+Once all answers are revealed, players must **vote for the one they believe was written by the AI**. You can't vote for your own answer.
 
 ## 🧠 Scoring
 - ✅ **1 point** for every vote your answer receives from other players  
