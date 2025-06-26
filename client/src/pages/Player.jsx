@@ -7,8 +7,10 @@ function Player() {
   const { roomName, ip } = useParams();
 
   const [socket, setSocket] = useState(null);
-  const [writtenState, setWrittenState] = useState("");
   const [userName, setUserName] = useState("");
+
+  const [joined, setJoined] = useState(false);
+  const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
     console.log(ip);
@@ -18,23 +20,29 @@ function Player() {
   }, [ip]);
 
   const joinRoom = () => {
-    console.log(`Joining ${roomName}`);
-
     socket.emit("join_room", { room: roomName, userName: userName });
+    setJoined(true);
+    setWaiting(true);
   };
 
-  return (
-    <div>
-      <h1>Player Page</h1>
-      <p>Room name: {roomName}</p>
-      <input
-        onChange={(event) => {
-          setUserName(event.target.value);
-        }}
-      />
-      <button onClick={joinRoom}>Join</button>
-    </div>
-  );
+  if (!joined) {
+    return (
+      <div>
+        <h1>Player Page</h1>
+        <p>Room name: {roomName}</p>
+        <input
+          onChange={(event) => {
+            setUserName(event.target.value);
+          }}
+        />
+        <button onClick={joinRoom}>Join</button>
+      </div>
+    );
+  } else {
+    if (waiting) {
+      return <p>Waiting for the player to start the game...</p>;
+    }
+  }
 }
 
 export default Player;
