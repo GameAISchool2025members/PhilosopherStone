@@ -12,6 +12,8 @@ function Player() {
   const [joined, setJoined] = useState(false);
   const [waiting, setWaiting] = useState(false);
 
+  const [gameState, setGameState] = useState(null);
+
   useEffect(() => {
     console.log(ip);
 

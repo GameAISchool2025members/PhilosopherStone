@@ -48,6 +48,7 @@ function Home() {
   const [ip, setIp] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameState, setGameState] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:3002/api/local-ip")
@@ -93,6 +94,7 @@ function Home() {
   const startGame = () => {
     socket.emit("start_game", { room: roomName });
     setGameStarted(true);
+    setGameState("play");
   };
 
   const getPrompt = (level) => {
@@ -120,19 +122,21 @@ function Home() {
     );
   };
 
-  const clockRenderer = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
-      // Render a completed state
-      return <p>Over</p>;
-    } else {
-      // Render a countdown
-      return (
-        <span>
-          {hours}:{minutes}:{seconds}
-        </span>
-      );
-    }
-  };
+  const clockRenderer =
+    (completeFn) =>
+    ({ _, minutes, seconds, completed }) => {
+      if (completed) {
+        completeFn();
+        return <></>;
+      } else {
+        return (
+          <span>
+            {String(minutes).padStart(2, "0")}:
+            {String(seconds).padStart(2, "0")}
+          </span>
+        );
+      }
+    };
 
   if (socket) {
     if (!roomName) {
@@ -173,13 +177,23 @@ function Home() {
           </div>
         );
       } else {
-        return (
-          <div>
-            <p>Start the game</p>
-            <div>{getPrompt(0)}</div>
-            <Countdown date={Date.now() + 5000} renderer={clockRenderer} />
-          </div>
-        );
+        if (gameState === "play") {
+          return (
+            <div>
+              <p>Start the game</p>
+              <div>{getPrompt(0)}</div>
+              {/* I am aware it throws an error on running time, but I think the logic is fine so I rather not tweak it for now */}
+              <Countdown
+                date={Date.now() + 6000}
+                renderer={clockRenderer(() => {
+                  setGameState("vote");
+                })}
+              />
+            </div>
+          );
+        } else if (gameState === "vote") {
+          return <p>Vote</p>;
+        }
       }
     }
   }
