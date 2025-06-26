@@ -14,7 +14,7 @@ function Player() {
     console.log(ip);
 
     //passing getData method to the lifecycle method
-    setSocket(io.connect(`${ip}:3001`));
+    setSocket(io.connect(`${ip}:3002`));
   }, [ip]);
 
   const joinRoom = () => {

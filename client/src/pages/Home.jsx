@@ -32,14 +32,26 @@ const animals = [
   "horse",
 ];
 
-function Home({ ip }) {
+function Home() {
   const [socket, setSocket] = useState(null);
   const [writtenState, setWrittenState] = useState("");
   const [sessionUsers, setSessionUsers] = useState([]);
+  const [ip, setIp] = useState(null);
+
+  useEffect(() => {
+    console.log("HETE");
+    fetch("http://localhost:3002/api/local-ip")
+      .then((res) => res.json())
+      .then((data) => setIp(data.ip));
+  }, []);
 
   useEffect(() => {
     //passing getData method to the lifecycle method
-    setSocket(io.connect(`${ip}:3001`));
+    console.log("HERE");
+
+    if (ip) {
+      setSocket(io.connect(`${ip}:3002`));
+    }
   }, [ip]);
 
   const [roomName, setRoomName] = useState(null);
