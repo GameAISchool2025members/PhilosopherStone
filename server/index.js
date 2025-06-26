@@ -11,7 +11,6 @@ const server = http.createServer(app);
 
 app.get("/api/local-ip", (req, res) => {
   const interfaces = os.networkInterfaces();
-  console.log(interfaces);
   let localIP = "";
 
   for (const iface of Object.values(interfaces)) {
@@ -38,7 +37,6 @@ io.on("connection", (socket) => {
   console.log(`New User: ${socket.id}`);
 
   socket.on("send_message", (data) => {
-    console.log(data);
     socket.broadcast.emit("recieve_message", data);
   });
 
@@ -46,6 +44,25 @@ io.on("connection", (socket) => {
     console.log(`User ${data.userName} joined room ${data.room}`);
     socket.join(data.room);
     socket.to(data.room).emit("user_join", data);
+  });
+
+  socket.on("send_prompt", (data) => {
+    console.log(`Sending new prompt to users in room: ${data.room}`);
+    socket.to(data.room).emit("new_prompt", data);
+  });
+
+  socket.on("player_text", (data) => {
+    console.log(
+      `User ${data.userName} submitted and answer in room ${data.room}`
+    );
+
+    socket.to(data.room).emit("player_answer", data);
+  });
+
+  socket.on("send_all_answers", (data) => {
+    console.log(`Callected all answers in room ${data.room}`);
+
+    socket.to(data.room).emit("all_answers", data);
   });
 });
 

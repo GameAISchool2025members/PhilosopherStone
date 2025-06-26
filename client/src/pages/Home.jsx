@@ -2,6 +2,7 @@ import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import Countdown from "react-countdown";
+import PlayState from "./PlayComponent";
 const colors = [
   "red",
   "blue",
@@ -41,6 +42,8 @@ const levels = [
 const roles = ["A queen", "A panda"];
 const places = ["On a wedding ceremony", "On a Tinder date"];
 
+const timerSeconds = 6;
+
 function Home() {
   const [socket, setSocket] = useState(null);
   const [writtenState, setWrittenState] = useState("");
@@ -49,6 +52,10 @@ function Home() {
   const [roomName, setRoomName] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameState, setGameState] = useState(null);
+  const [currentLevel, setCurrentLevel] = useState(0);
+  const [countdownTime, setCountdownTime] = useState(null);
+  const [promptData, setPromptData] = useState(null);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:3002/api/local-ip")
@@ -63,8 +70,6 @@ function Home() {
   }, [ip]);
 
   useEffect(() => {
-    console.log(socket);
-
     if (socket) {
       socket.on("recieve_message", (data) => {
         setWrittenState(data.message);
@@ -74,8 +79,26 @@ function Home() {
       socket.on("user_join", (data) => {
         setSessionUsers([...sessionUsers, data.userName]);
       });
+
+      socket.on("player_answer", (data) => {
+        setAnswers((prevAnswers) => {
+          const index = prevAnswers.findIndex(
+            (item) => item.userName === data.userName
+          );
+
+          if (index !== -1) {
+            // Update existing item
+            const updatedItems = [...prevAnswers];
+            updatedItems[index] = data;
+            return updatedItems;
+          } else {
+            // Add new item
+            return [...prevAnswers, data];
+          }
+        });
+      });
     }
-  }, [sessionUsers, socket]);
+  }, [answers, sessionUsers, socket]);
 
   const createRoom = () => {
     const randColor = colors[Math.floor(Math.random() * colors.length)];
@@ -97,46 +120,51 @@ function Home() {
     setGameState("play");
   };
 
-  const getPrompt = (level) => {
-    const currentLevel = levels[level];
-    const basic_prompt =
-      currentLevel.prompts[
-        Math.floor(Math.random() * currentLevel.prompts.length)
-      ];
+  useEffect(() => {
+    if (gameState === "play") {
+      const basic_prompt =
+        levels[currentLevel].prompts[
+          Math.floor(Math.random() * levels[currentLevel].prompts.length)
+        ];
 
-    const randRol = roles[Math.floor(Math.random() * roles.length)];
-    const randPlace = places[Math.floor(Math.random() * places.length)];
+      const randRole = roles[Math.floor(Math.random() * roles.length)];
+      const randPlace = places[Math.floor(Math.random() * places.length)];
 
-    return (
-      <div>
-        <p>
-          The question is: <b>{basic_prompt}</b>
-        </p>
-        <p>
-          You have to answer as <b>{randRol.toLowerCase()}</b>
-        </p>
-        <p>
-          Imagining that you are <b>{randPlace.toLowerCase()}</b>
-        </p>
-      </div>
-    );
-  };
+      const timeLimit = Date.now() + timerSeconds * 1000;
 
-  const clockRenderer =
-    (completeFn) =>
-    ({ _, minutes, seconds, completed }) => {
-      if (completed) {
-        completeFn();
-        return <></>;
-      } else {
-        return (
-          <span>
-            {String(minutes).padStart(2, "0")}:
-            {String(seconds).padStart(2, "0")}
-          </span>
-        );
-      }
-    };
+      setPromptData({
+        prompt: basic_prompt,
+        role: randRole,
+        place: randPlace,
+      });
+
+      setCountdownTime(timeLimit);
+
+      socket.emit("send_prompt", {
+        room: roomName,
+        prompt: basic_prompt,
+        role: randRole,
+        place: randPlace,
+        timeLimit: timeLimit,
+        level: currentLevel,
+        total_levels: levels.length,
+      });
+
+      setAnswers([{ userName: "PhilosopherLLM", answer: "LLM Answer" }]);
+    }
+  }, [currentLevel, gameState, roomName, socket]);
+
+  // When all answers collected, send to users
+  useEffect(() => {
+    if (answers.length === sessionUsers.length && answers.length > 0) {
+      socket.emit("send_all_answers", {
+        room: roomName,
+        answers: [...answers].sort(() => Math.random() - 0.5), //Randomize order, just in case
+      });
+      // Reset, just in case
+      // setAnswers([]);
+    }
+  }, [answers, roomName, sessionUsers, socket]);
 
   if (socket) {
     if (!roomName) {
@@ -179,20 +207,30 @@ function Home() {
       } else {
         if (gameState === "play") {
           return (
-            <div>
-              <p>Start the game</p>
-              <div>{getPrompt(0)}</div>
-              {/* I am aware it throws an error on running time, but I think the logic is fine so I rather not tweak it for now */}
-              <Countdown
-                date={Date.now() + 6000}
-                renderer={clockRenderer(() => {
-                  setGameState("vote");
-                })}
-              />
-            </div>
+            <PlayState
+              currentLevel={currentLevel}
+              totalLevels={levels.length}
+              promptData={promptData}
+              countdownTime={countdownTime}
+              completeClockFn={() => setGameState("vote")}
+            />
           );
         } else if (gameState === "vote") {
-          return <p>Vote</p>;
+          return (
+            <div>
+              <p>
+                {currentLevel + 1}/{levels.length}
+              </p>
+              <p>Vote</p>
+              <div>
+                {[...answers]
+                  .sort(() => Math.random() - 0.5)
+                  .map((randAnswer, i) => {
+                    return <p key={randAnswer.username}>{randAnswer.answer}</p>;
+                  })}
+              </div>
+            </div>
+          );
         }
       }
     }
