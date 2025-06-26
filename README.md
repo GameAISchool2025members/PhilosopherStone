@@ -1,6 +1,6 @@
 # The Philosopher's Stone
 
-# 🏛️ A Chilling Party Game of Philosophy and Deception
+<p><em style="font-size: 0.9em;">🏛️ A Chilling Party Game of Philosophy and Deception</em></p>
 
 In this party game, you'll answer strange and profound questions posed by Ancient Greek philosophers — reincarnated from a mysterious philosopher's stone. But there's a twist:
 
@@ -15,3 +15,4 @@ Once all answers are revealed, players must **vote for the one they believe was 
 - ✅ **1 point** if you successfully identify the real AI answer
 
 Can you outwit the machine — and your friends?
+
