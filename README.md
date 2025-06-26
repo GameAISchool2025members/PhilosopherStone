@@ -24,7 +24,7 @@ Can you outwit the machine — and your friends?
 - **Filip Josefsson** — Programming   
 - **Janus Jørgensen** — UI Design  
 - **Henrik Svensson Dalgren** — Visual Design
-- **Mingmin Wu** — Narrative Design 
+- **Mingmin Wu** — Project Management & Narrative Design 
 
 <img src="server/IMG_7769.jpg" width="600"/>
 
