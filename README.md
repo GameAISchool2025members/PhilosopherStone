@@ -10,13 +10,13 @@ At the same time, an **AI agent** 🤖 will also answer the question.
 
 Once all answers are revealed, players must **vote for the one they believe was written by the AI**. You can't vote for your own answer.
 
-## 🧠 Scoring
+## Scoring
 - ✅ **1 point** for every vote your answer receives from other players  
 - ✅ **1 point** if you successfully identify the real AI answer
 
 Can you outwit the machine — and your friends?
 
-## 👥 The Team
+## The Team
 
 - **Alejandro Valverde Mahou** — Programming
 - **Filip Josefsson** — Programming   
