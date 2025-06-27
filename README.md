@@ -26,3 +26,5 @@ Can you outwit the machine — and your friends?
 
 <img src="server/IMG_7769.jpg" width="600"/>
 
+## The Project
+This game was created during the 7th International Summer School on AI and Games, held in Malmö, Sweden. Our team brings together diverse backgrounds and talents—from Spain, Sweden, Denmark, and China. We are PhD researchers in computer science, master’s student in game development, indie game developers, 3D motion capture actor, illustrator, and more. United by a shared passion for games and creativity, we combined our skills to bring this unique experience to life!
