@@ -168,6 +168,7 @@ function Home() {
 
   if (socket) {
     if (!roomName) {
+      /* This is the default page. Only a button exist here to create a room. Starting page */
       return (
         <div>
           <button onClick={createRoom}>
@@ -177,6 +178,7 @@ function Home() {
       );
     } else {
       if (!gameStarted) {
+        /* After the button is clicked, it shows the room name, the QR code and the link in case the QR does not work (feel free to change anything here). Afterwards, I added the intro text (it is a bit ugly and probably I did not set it in the correct place). As users join the room, they appear in a list format (the map function). Lastly, there is a button to start the game */
         return (
           <div>
             <h1>{roomName}</h1>
@@ -206,6 +208,7 @@ function Home() {
         );
       } else {
         if (gameState === "play") {
+          /* This part is the main game loop, where the players are playing. It only shows the timer, and the prompts */
           return (
             <PlayState
               currentLevel={currentLevel}
@@ -216,6 +219,7 @@ function Home() {
             />
           );
         } else if (gameState === "vote") {
+          /* In here it is the voting system. W.I.P */
           return (
             <div>
               <p>
@@ -229,6 +233,10 @@ function Home() {
                     return <p key={randAnswer.username}>{randAnswer.answer}</p>;
                   })}
               </div>
+              <Countdown
+                date={Date.now() + timerSeconds * 1000}
+                // renderer={}
+              />
             </div>
           );
         }
