@@ -39,6 +39,10 @@ const levels = [
     philosopher: "Socrates",
     prompts: ["What is the good life?"],
   },
+  {
+    philosopher: "Socrates",
+    prompts: ["What is the good life?"],
+  },
 ];
 
 const roles = ["A queen", "A panda"];
@@ -60,6 +64,7 @@ function Home() {
   const [votingCountdownTime, setVotingCountdownTime] = useState(null);
   const [promptData, setPromptData] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [updateLevel, setUpdateLevel] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:3002/api/local-ip")
@@ -77,7 +82,6 @@ function Home() {
     if (socket) {
       socket.on("recieve_message", (data) => {
         setWrittenState(data.message);
-        console.log(data);
       });
 
       socket.on("user_join", (data) => {
@@ -110,8 +114,6 @@ function Home() {
   useEffect(() => {
     if (socket) {
       socket.on("new_vote", (data) => {
-        console.log("VOTING");
-
         // If user got the correct solution
         if (data.vote === "PhilosopherLLM") {
           setSessionUsers((prevUsers) =>
@@ -121,10 +123,32 @@ function Home() {
                 : user
             )
           );
+        } else {
+          setSessionUsers((prevUsers) =>
+            prevUsers.map((user) =>
+              user.userName === data.vote
+                ? { ...user, score: user.score + 1 }
+                : user
+            )
+          );
         }
       });
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (updateLevel && currentLevel) {
+      setUpdateLevel(false);
+      setCountdownTime(null);
+      setVotingCountdownTime(null);
+
+      if (currentLevel >= levels.length) {
+        setGameState("gameover");
+      } else {
+        setGameState("play");
+      }
+    }
+  }, [currentLevel, updateLevel]);
 
   const createRoom = () => {
     const randColor = colors[Math.floor(Math.random() * colors.length)];
@@ -144,6 +168,8 @@ function Home() {
     socket.emit("start_game", { room: roomName });
     setGameStarted(true);
     setGameState("play");
+    setCountdownTime(null);
+    setVotingCountdownTime(null);
   };
 
   useEffect(() => {
@@ -195,6 +221,8 @@ function Home() {
     }
   }, [answers, roomName, sessionUsers, socket]);
 
+  console.log(gameState);
+
   if (socket) {
     if (!roomName) {
       /* This is the default page. Only a button exist here to create a room. Starting page */
@@ -228,8 +256,8 @@ function Home() {
             <p>
               As you reach out to touch it, the stone speaks: “Among you hides
               an alien — an AI agent in disguise. I will ask you questions to
-              reveal who it is. Only the one who shows the most wisdom may
-              pass.”
+              reveal who it is. Only th {gameState}e one who shows the most
+              wisdom may pass.”
             </p>
             <p> Let the philosophical challenge begin.</p>
             <button onClick={startGame}>Start Game</button>
@@ -238,13 +266,16 @@ function Home() {
       } else {
         if (gameState === "play") {
           /* This part is the main game loop, where the players are playing. It only shows the timer, and the prompts */
+
           return (
             <PlayState
               currentLevel={currentLevel}
               totalLevels={levels.length}
               promptData={promptData}
               countdownTime={countdownTime}
-              completeClockFn={() => setGameState("vote")}
+              completeClockFn={() => {
+                setGameState("vote");
+              }}
             />
           );
         } else if (gameState === "vote") {
@@ -272,9 +303,31 @@ function Home() {
                     </p>
                   );
                 })}
+              <button
+                onClick={() => {
+                  setCurrentLevel(currentLevel + 1);
+                  setUpdateLevel(true);
+                }}
+              >
+                Next round
+              </button>
             </div>
           );
         } else if (gameState === "gameover") {
+          return (
+            <div>
+              <h1>Final Scores</h1>
+              {sessionUsers
+                .sort((a, b) => b.score - a.score)
+                .map((user, i) => {
+                  return (
+                    <p key={`${user.userName}-${i}`}>
+                      User {i}: {user.userName} -- score: {user.score}
+                    </p>
+                  );
+                })}
+            </div>
+          );
         }
       }
     }
