@@ -249,7 +249,7 @@ function Home() {
         /* After the button is clicked, it shows the room name, the QR code and the link in case the QR does not work (feel free to change anything here). Afterwards, I added the intro text (it is a bit ugly and probably I did not set it in the correct place). As users join the room, they appear in a list format (the map function). Lastly, there is a button to start the game */
         return (
           <div>
-            <h1>{roomName}</h1>
+            <h1 className="roomName">{roomName}</h1>
             <QRCode className="qr" size={128} value={`http://${ip}:3000/player/${roomName}/${ip}`} />
             <p>{`${ip}:3000/player/${roomName}/${ip}`} </p>
             {sessionUsers.map((user, i) => {

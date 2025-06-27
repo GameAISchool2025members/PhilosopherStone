@@ -54,7 +54,7 @@ p {
     font: bold;
 }
 
-h1 {
+.roomName {
     text-align: center;
     margin: auto;
     margin-bottom: 5%;
