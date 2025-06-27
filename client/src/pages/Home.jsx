@@ -40,13 +40,17 @@ const levels = [
     prompts: ["What is the good life?"],
   },
   {
-    philosopher: "Socrates",
-    prompts: ["What is the good life?"],
+    philosopher: "Plato",
+    prompts: ["What is truly real—what you see, or what you imagine?"],
   },
+  {
+    philosopher: "Aristotle",
+    prompts: ["What is the purpose of a human being?"],
+  }
 ];
 
-const roles = ["A queen", "A panda"];
-const places = ["On a wedding ceremony", "On a Tinder date"];
+const roles = ["A queen", "A panda", "A penniless guy", "A college student", "The European central bank", "An AI agent", "A widow", "An uemployed programmer", "A drug dealer", "Jack The Ripper", "A priest", "A game developper", "A dentist", "A rapper", "A weather anchor", "A drunk taxi driver", "Snow White", "A Swedish forest", "A watermelon", "A life coach", "Your ex", "A weird neighbor", "A magic mirror"];
+const places = ["On a wedding ceremony", "On a Tinder date", "On a tree", "In the sea", "On a presidential election campaign", "In your grandmother's memory", "During a job interview", "In a dentist’s chair", "In a museum", "On the day of the end of the world", "On a medical operation table", "In a karaoke bar", "At a tax office", "In the waiting line of a supermarket", "In a doctor's office", "On Mars", "In a courtroom", "At a funeral", "In a cinema", "In the elevator with your (present/previous) boss", "At a therapist’s office", "On a pirate ship", "At a funeral"];
 
 const timerSeconds = 6;
 const voteTimerSeconds = 7;
@@ -86,8 +90,6 @@ function Home() {
       });
 
       socket.on("user_join", (data) => {
-        console.log("JOINED");
-
         setSessionUsers([
           ...sessionUsers,
           { userName: data.userName, score: 0 },
@@ -194,10 +196,13 @@ function Home() {
     };
     data = JSON.stringify(data);
 
-    const url = "http://localhost:11434/api/chat";
+    const url = "http://localhost:3001/api/chat";
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
+      console.log(this.status);
+      console.log(this);
+
       if (this.readyState === 4 && this.status === 200) {
         // Typical action to be performed when the document is ready:
         // document.getElementById("demo").innerHTML = xhttp.responseText;
@@ -212,6 +217,7 @@ function Home() {
       }
     };
     xhttp.open("Post", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(data);
   };
 
@@ -264,8 +270,6 @@ function Home() {
     }
   }, [answers, roomName, sessionUsers, socket]);
 
-  console.log(gameState);
-
   if (socket) {
     if (!roomName) {
       /* This is the default page. Only a button exist here to create a room. Starting page */
@@ -282,7 +286,11 @@ function Home() {
         return (
           <div>
             <h1 className="roomName">{roomName}</h1>
-            <QRCode className="qr" size={128} value={`http://${ip}:3000/player/${roomName}/${ip}`} />
+            <QRCode
+              className="qr"
+              size={128}
+              value={`http://${ip}:3000/player/${roomName}/${ip}`}
+            />
             <p>{`${ip}:3000/player/${roomName}/${ip}`} </p>
             {sessionUsers.map((user, i) => {
               return (
@@ -299,7 +307,7 @@ function Home() {
             <p>
               As you reach out to touch it, the stone speaks: “Among you hides
               an alien — an AI agent in disguise. I will ask you questions to
-              reveal who it is. Only th {gameState}e one who shows the most
+              reveal who it is. Only the one who shows the most
               wisdom may pass.”
             </p>
             <p> Let the philosophical challenge begin.</p>
@@ -331,6 +339,7 @@ function Home() {
               countdownTime={votingCountdownTime}
               completeClockFn={() => {
                 setGameState("scores");
+                socket.emit("end_voting", { room: roomName });
               }}
             />
           );

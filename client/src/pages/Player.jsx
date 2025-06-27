@@ -18,6 +18,7 @@ function Player() {
   const [totalLevels, setTotalLevels] = useState(0);
   const [answer, setAnswer] = useState("");
   const [votingOptions, setVotingOptions] = useState([]);
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
 
   const castVote = (opt) => () => {
     socket.emit("cast_vote", {
@@ -25,6 +26,7 @@ function Player() {
       userName: userName,
       vote: opt.userName,
     });
+    setAlreadyVoted(true);
   };
 
   useEffect(() => {
@@ -49,6 +51,10 @@ function Player() {
       socket.on("all_answers", (data) => {
         setVotingOptions(data.answers);
       });
+
+      socket.on("voting_over", (_) => {
+        setGameState("scores");
+      });
     }
   }, [socket]);
 
@@ -59,14 +65,13 @@ function Player() {
   };
 
   const timeOver = () => {
-    console.log("AA");
-
     socket.emit("player_text", {
       room: roomName,
       userName: userName,
       answer: answer,
     });
     setGameState("vote");
+    setAlreadyVoted(false);
     setAnswer("");
   };
 
@@ -75,6 +80,7 @@ function Player() {
       <div>
         <h1>Player Page</h1>
         <p>Room name: {roomName}</p>
+        <p>Tell me your name please</p>
         <input
           onChange={(event) => {
             setUserName(event.target.value);
@@ -85,7 +91,7 @@ function Player() {
     );
   } else {
     if (gameState === "wait") {
-      return <p>Waiting for the player to start the game...</p>;
+      return <p>Waiting for The Philosopher's Stone to start the game...</p>;
     } else if (gameState === "play") {
       return (
         <div>
@@ -106,13 +112,14 @@ function Player() {
     } else if (gameState === "vote") {
       return (
         <div>
+          <p>Which answer comes from the AI agent?</p>
           {votingOptions.map((opt, i) => {
             return (
               <div>
                 <button
                   onClick={castVote(opt)}
                   key={i}
-                  disabled={opt.userName === userName}
+                  disabled={opt.userName === userName || alreadyVoted}
                 >
                   {opt.answer}
                 </button>
@@ -120,6 +127,10 @@ function Player() {
             );
           })}
         </div>
+      );
+    } else if (gameState === "scores") {
+      return (
+        <p>where you able to fool your peers? Check out the host screen</p>
       );
     }
   }

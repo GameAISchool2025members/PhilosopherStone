@@ -72,6 +72,12 @@ io.on("connection", (socket) => {
 
     socket.to(data.room).emit("new_vote", data);
   });
+
+  socket.on("end_voting", (data) => {
+    console.log(`TIme over for voting in ${data.room}`);
+
+    socket.to(data.room).emit("voting_over", data);
+  });
 });
 
 server.listen(3002, "0.0.0.0", () => {
