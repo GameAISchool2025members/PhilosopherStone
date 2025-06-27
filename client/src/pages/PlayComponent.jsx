@@ -1,4 +1,5 @@
 import Countdown from "react-countdown";
+import BackGroundImg from "../images/forrest_temple.png";
 
 function PlayState({
   currentLevel,
@@ -8,6 +9,7 @@ function PlayState({
   completeClockFn,
 }) {
   const clockRenderer = ({ _, minutes, seconds, completed }) => {
+  
     if (completed) {
       completeClockFn();
       return <></>;
@@ -21,12 +23,17 @@ function PlayState({
   };
 
   return (
+
     <div>
+      
       <p>
         {currentLevel + 1}/{totalLevels}
+        
       </p>
+
+      <img className="backGroundImg" src={BackGroundImg} alt="Background Image"/>
       {promptData && (
-        <div>
+        <div className="philosperQuestion">
           <p>
             The question is: <b>{promptData.prompt}</b>
           </p>

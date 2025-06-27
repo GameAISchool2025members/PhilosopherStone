@@ -270,7 +270,7 @@ function Home() {
     if (!roomName) {
       /* This is the default page. Only a button exist here to create a room. Starting page */
       return (
-        <div>
+        <div className="btn">
           <button onClick={createRoom}>
             <h1>Create a Room</h1>
           </button>
