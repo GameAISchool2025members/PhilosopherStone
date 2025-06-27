@@ -75,6 +75,7 @@ function Player() {
       <div>
         <h1>Player Page</h1>
         <p>Room name: {roomName}</p>
+        <p>Tell me your name please</p>
         <input
           onChange={(event) => {
             setUserName(event.target.value);
@@ -85,7 +86,7 @@ function Player() {
     );
   } else {
     if (gameState === "wait") {
-      return <p>Waiting for the player to start the game...</p>;
+      return <p>Waiting for The Philosopher's Stone to start the game...</p>;
     } else if (gameState === "play") {
       return (
         <div>
@@ -106,6 +107,7 @@ function Player() {
     } else if (gameState === "vote") {
       return (
         <div>
+          <p>Which answer comes from the AI agent?</p>
           {votingOptions.map((opt, i) => {
             return (
               <div>
