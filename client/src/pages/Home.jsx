@@ -86,8 +86,6 @@ function Home() {
       });
 
       socket.on("user_join", (data) => {
-        console.log("JOINED");
-
         setSessionUsers([
           ...sessionUsers,
           { userName: data.userName, score: 0 },
@@ -194,10 +192,13 @@ function Home() {
     };
     data = JSON.stringify(data);
 
-    const url = "http://localhost:11434/api/chat";
+    const url = "http://localhost:3001/api/chat";
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
+      console.log(this.status);
+      console.log(this);
+
       if (this.readyState === 4 && this.status === 200) {
         // Typical action to be performed when the document is ready:
         // document.getElementById("demo").innerHTML = xhttp.responseText;
@@ -212,6 +213,7 @@ function Home() {
       }
     };
     xhttp.open("Post", url, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(data);
   };
 
@@ -264,8 +266,6 @@ function Home() {
     }
   }, [answers, roomName, sessionUsers, socket]);
 
-  console.log(gameState);
-
   if (socket) {
     if (!roomName) {
       /* This is the default page. Only a button exist here to create a room. Starting page */
@@ -282,7 +282,11 @@ function Home() {
         return (
           <div>
             <h1 className="roomName">{roomName}</h1>
-            <QRCode className="qr" size={128} value={`http://${ip}:3000/player/${roomName}/${ip}`} />
+            <QRCode
+              className="qr"
+              size={128}
+              value={`http://${ip}:3000/player/${roomName}/${ip}`}
+            />
             <p>{`${ip}:3000/player/${roomName}/${ip}`} </p>
             {sessionUsers.map((user, i) => {
               return (
