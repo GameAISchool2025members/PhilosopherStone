@@ -60,9 +60,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_all_answers", (data) => {
-    console.log(`Callected all answers in room ${data.room}`);
+    console.log(`Collected all answers in room ${data.room}`);
 
     socket.to(data.room).emit("all_answers", data);
+  });
+
+  socket.on("cast_vote", (data) => {
+    console.log(
+      `User ${data.userName} casted a vote in room ${data.room} for ${data.vote}`
+    );
+
+    socket.to(data.room).emit("new_vote", data);
   });
 });
 

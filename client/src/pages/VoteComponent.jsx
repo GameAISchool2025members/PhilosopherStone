@@ -1,6 +1,12 @@
 import Countdown from "react-countdown";
 
-function VoteState({ completeClockFn }) {
+function VoteState({
+  currentLevel,
+  totalLevels,
+  countdownTime,
+  answers,
+  completeClockFn,
+}) {
   const clockRenderer = ({ _, minutes, seconds, completed }) => {
     if (completed) {
       completeClockFn();
@@ -15,7 +21,20 @@ function VoteState({ completeClockFn }) {
   };
   return (
     <div>
-      <p>aa</p>
+      <p>
+        {currentLevel + 1}/{totalLevels}
+      </p>
+      <p>Vote</p>
+      <div>
+        {[...answers]
+          .sort(() => Math.random() - 0.5)
+          .map((randAnswer, i) => {
+            return <p key={randAnswer.username}>{randAnswer.answer}</p>;
+          })}
+      </div>
+      {countdownTime && (
+        <Countdown date={countdownTime} renderer={clockRenderer} />
+      )}
     </div>
   );
 }

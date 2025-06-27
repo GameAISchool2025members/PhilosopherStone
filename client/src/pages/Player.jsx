@@ -19,8 +19,8 @@ function Player() {
   const [answer, setAnswer] = useState("");
   const [votingOptions, setVotingOptions] = useState([]);
 
-  const castVote = (opt) => {
-    socket.emit("cat_vote", {
+  const castVote = (opt) => () => {
+    socket.emit("cast_vote", {
       room: roomName,
       userName: userName,
       vote: opt.userName,
