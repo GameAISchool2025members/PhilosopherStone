@@ -60,6 +60,7 @@ function Home() {
   const [votingCountdownTime, setVotingCountdownTime] = useState(null);
   const [promptData, setPromptData] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [LLManswers, setLLMAnswers] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:3002/api/local-ip")
@@ -81,6 +82,8 @@ function Home() {
       });
 
       socket.on("user_join", (data) => {
+        console.log("JOINED");
+        
         setSessionUsers([
           ...sessionUsers,
           { userName: data.userName, score: 0 },
@@ -146,6 +149,41 @@ function Home() {
     setGameState("play");
   };
 
+  const getLLMAnswer = (prompt, role, place) => {
+
+    const full_prompt = "Answer the question: " + prompt + "\n" + "You have to answer as " + role + " and as if you are " + place + ".\nIt is very important to keep the answer below 70 characters and with only one sentence. Make the text be inconspicous and like a human wrote it in less than 30 seconds. Remove any quotation marks from the answer. Remove any emoji from the answer. Skip any introduction."
+    var data = {
+        "model": "llama3",
+        "messages": [
+            {"role": "user", "content": full_prompt}
+        ],
+        "options": {
+            "num_ctx": 2048
+        }
+    }
+    data = JSON.stringify(data)
+
+    const url="http://localhost:11434/api/chat"
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            // Typical action to be performed when the document is ready:
+            // document.getElementById("demo").innerHTML = xhttp.responseText;
+            var response = ""
+            var responselist = xhttp.responseText.split('\n')
+            responselist.splice(responselist.length-1, 1)
+            for (let i = 0; i < responselist.length; i++){
+                response = response + JSON.parse(responselist[i])["message"]["content"]
+            }
+            setAnswers([{ userName: "PhilosopherLLM", answer: response}])
+        }
+    };
+    xhttp.open("Post", url, true);
+    xhttp.send(data);
+  };
+
+
   useEffect(() => {
     if (gameState === "play") {
       const basic_prompt =
@@ -175,8 +213,9 @@ function Home() {
         level: currentLevel,
         total_levels: levels.length,
       });
-
-      setAnswers([{ userName: "PhilosopherLLM", answer: "LLM Answer" }]);
+    
+      getLLMAnswer(basic_prompt, randRole, randPlace)
+      
     } else if (gameState === "vote") {
       const voteTimeLimit = Date.now() + voteTimerSeconds * 1000;
       setVotingCountdownTime(voteTimeLimit);
