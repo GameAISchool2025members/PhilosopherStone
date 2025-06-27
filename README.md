@@ -13,7 +13,7 @@ At the same time, an **AI agent** 🤖 will also answer the question.
 Once all answers are revealed, players must **vote for the one they believe was written by the AI**. You can't vote for your own answer.</p>
     </td>
     <td>
-      <img src="images/Plato_Henrik_2.png" alt="Image description" width="300">
+      <img src="images/Plato_Henrik_2.png" alt="Image description" width="500">
     </td>
   </tr>
 </table> 
