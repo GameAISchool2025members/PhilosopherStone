@@ -211,7 +211,7 @@ function Home() {
         return (
           <div>
             <h1>{roomName}</h1>
-            <QRCode value={`http://${ip}:3000/player/${roomName}/${ip}`} />
+            <QRCode className="qr" size={128} value={`http://${ip}:3000/player/${roomName}/${ip}`} />
             <p>{`${ip}:3000/player/${roomName}/${ip}`} </p>
             {sessionUsers.map((user, i) => {
               return (
