@@ -2,7 +2,7 @@
 <table>
   <tr>
     <td>
-      <p>🏛️ A Chilling Party Game of Philosophy and Deception</em></p>
+     <p><em><h2>🏛️A Chilling Party Game of Philosophy and Deception</h2></em></p>
 
 In this party game, you'll answer strange and profound questions posed by Ancient Greek philosophers — reincarnated from a mysterious philosopher's stone. But there's a twist:
 
