@@ -1,0 +1,69 @@
+
+@media only screen and (max-width: 600px) {
+    
+
+    html, body {
+      height: 100%;
+    }
+
+    html {
+        display: table;
+        margin: auto;
+        margin: 10%;
+    }
+
+    body {
+        
+        display: table-cell;
+        text-align: center;
+    }
+}
+
+html {
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background-color: rgb(230, 191, 114);
+}
+
+#title {
+  font-size: 250%;
+
+}
+
+.qr {
+    
+    width: 30%; 
+    height: 30%; 
+    float: right;
+    margin: 5%;
+}
+
+/* Phone answer */
+.prompt_msg {
+    color: black;
+
+}
+
+p {
+    font-size: 200%;
+    margin: 2%;
+    margin-top: 2%;
+    font: bold;
+}
+
+.roomName {
+    text-align: center;
+    margin: auto;
+    margin-bottom: 5%;
+    width: 10%;
+    
+}
+
+.btn {
+    size: 500%;
+}
+
+
