@@ -18,6 +18,7 @@ function Player() {
   const [totalLevels, setTotalLevels] = useState(0);
   const [answer, setAnswer] = useState("");
   const [votingOptions, setVotingOptions] = useState([]);
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
 
   const castVote = (opt) => () => {
     socket.emit("cast_vote", {
@@ -25,6 +26,7 @@ function Player() {
       userName: userName,
       vote: opt.userName,
     });
+    setAlreadyVoted(true);
   };
 
   useEffect(() => {
@@ -49,6 +51,10 @@ function Player() {
       socket.on("all_answers", (data) => {
         setVotingOptions(data.answers);
       });
+
+      socket.on("voting_over", (_) => {
+        setGameState("scores");
+      });
     }
   }, [socket]);
 
@@ -59,14 +65,13 @@ function Player() {
   };
 
   const timeOver = () => {
-    console.log("AA");
-
     socket.emit("player_text", {
       room: roomName,
       userName: userName,
       answer: answer,
     });
     setGameState("vote");
+    setAlreadyVoted(false);
     setAnswer("");
   };
 
@@ -112,7 +117,7 @@ function Player() {
                 <button
                   onClick={castVote(opt)}
                   key={i}
-                  disabled={opt.userName === userName}
+                  disabled={opt.userName === userName || alreadyVoted}
                 >
                   {opt.answer}
                 </button>
@@ -120,6 +125,10 @@ function Player() {
             );
           })}
         </div>
+      );
+    } else if (gameState === "scores") {
+      return (
+        <p>where you able to fool your peers? Check out the host screen</p>
       );
     }
   }

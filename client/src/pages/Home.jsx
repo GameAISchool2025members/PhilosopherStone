@@ -335,6 +335,7 @@ function Home() {
               countdownTime={votingCountdownTime}
               completeClockFn={() => {
                 setGameState("scores");
+                socket.emit("end_voting", { room: roomName });
               }}
             />
           );
