@@ -1,5 +1,6 @@
 import Countdown from "react-countdown";
-import BackGroundImg from "../images/forrest_temple.png";
+import BackGroundImg from "../images/forrest_pstone_plato.png";
+
 
 function PlayState({
   currentLevel,
@@ -31,9 +32,12 @@ function PlayState({
         
       </p>
 
-      <img className="backGroundImg" src={BackGroundImg} alt="Background Image"/>
+      <div id="BackgroungBox">
+        <img className="backGroundImg" src={BackGroundImg} alt="Background Image"/>
+      </div>
+      
       {promptData && (
-        <div className="philosperQuestion">
+        <div className="philosopherQuestion">
           <p>
             The question is: <b>{promptData.prompt}</b>
           </p>
@@ -47,7 +51,7 @@ function PlayState({
       )}
       {/* I am aware it throws an error on running time, but I think the logic is fine so I rather not tweak it for now */}
       {countdownTime && (
-        <Countdown date={countdownTime} renderer={clockRenderer} />
+        <Countdown className="timer" date={countdownTime} renderer={clockRenderer} />
       )}
     </div>
   );

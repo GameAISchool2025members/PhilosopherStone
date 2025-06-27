@@ -54,7 +54,11 @@ p {
     margin: 2%;
     margin-top: 2%;
     font: bold;
+    
+
 }
+
+
 
 .roomName {
     text-align: center;
@@ -68,16 +72,33 @@ p {
     size: 500%;
 }
 
-.backGroundImg {
+#BackgroungBox {
     position: fixed;
     left: 0%;
     top: 0%;
-    opacity: 50%;
+    z-index: -100;
+}
+
+.timer {
+    background-color: white;
+}
+
+.backGroundImg {
+    position: relative;
+    
+    /* opacity: 50%; */
     
 }
 
-.philosopherQuestion {
+.philosopherImg {
+    position: relative;
+    z-index: 101;
 
+}
+
+.philosopherQuestion {
+    background-color: white;
+    opacity: 90%;
 }
 
 button {

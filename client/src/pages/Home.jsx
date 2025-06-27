@@ -52,8 +52,8 @@ const levels = [
 const roles = ["A queen", "A panda", "A penniless guy", "A college student", "The European central bank", "An AI agent", "A widow", "An uemployed programmer", "A drug dealer", "Jack The Ripper", "A priest", "A game developper", "A dentist", "A rapper", "A weather anchor", "A drunk taxi driver", "Snow White", "A Swedish forest", "A watermelon", "A life coach", "Your ex", "A weird neighbor", "A magic mirror"];
 const places = ["On a wedding ceremony", "On a Tinder date", "On a tree", "In the sea", "On a presidential election campaign", "In your grandmother's memory", "During a job interview", "In a dentist’s chair", "In a museum", "On the day of the end of the world", "On a medical operation table", "In a karaoke bar", "At a tax office", "In the waiting line of a supermarket", "In a doctor's office", "On Mars", "In a courtroom", "At a funeral", "In a cinema", "In the elevator with your (present/previous) boss", "At a therapist’s office", "On a pirate ship", "At a funeral"];
 
-const timerSeconds = 6;
-const voteTimerSeconds = 7;
+const timerSeconds = 30;
+const voteTimerSeconds = 10;
 
 function Home() {
   const [socket, setSocket] = useState(null);
